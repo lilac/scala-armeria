@@ -14,7 +14,6 @@ object GrpcPlugin extends ScopedGrpcPlugin(Compile) {
 }
 
 class ScopedGrpcPlugin(configuration: Configuration) extends AutoPlugin {
-  self =>
 
   override def requires = sbtprotobuf.ProtobufPlugin
 
@@ -41,7 +40,7 @@ class ScopedGrpcPlugin(configuration: Configuration) extends AutoPlugin {
   val grpcExePath = SettingKey[xsbti.api.Lazy[File]]("grpcExePath")
   val grpcOutPath = SettingKey[File]("grpc out path")
 
-  val grpcSettings = Seq(
+  override lazy val projectSettings: Seq[Setting[_]] = Seq(
     grpcExePath := xsbti.api.SafeLazy.strict {
       val exe: File = baseDirectory.value / ".bin" / grpcExeFileName
       if (!exe.exists) {

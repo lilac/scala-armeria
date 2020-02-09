@@ -1,17 +1,13 @@
 
 import Dependencies._
 
-enablePlugins(GrpcPlugin)
-
-import GrpcPlugin.grpcSettings
-
 ThisBuild / scalaVersion     := "2.13.1"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organization     := "com.example"
 ThisBuild / organizationName := "example"
 
 lazy val root = (project in file("."))
-  .settings(grpcSettings)
+  .enablePlugins(GrpcPlugin)
   .settings(
     name := "scala-armeria",
     libraryDependencies ++= Seq(
