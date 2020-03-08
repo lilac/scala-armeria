@@ -60,7 +60,7 @@ class ScopedGrpcPlugin(configuration: Configuration) extends AutoPlugin {
     protobufProtocOptions in ProtobufConfig ++= Seq(
       s"--plugin=protoc-gen-java_rpc=${grpcExePath.value.get}",
       s"--java_rpc_out=${grpcOutPath.value.getAbsolutePath}"
-    ),
+    )
   )
 
 }

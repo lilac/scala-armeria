@@ -26,6 +26,11 @@ object Main extends App {
     .service(service, LoggingService.newDecorator())
     .serviceUnder("/docs", new DocService)
     .build()
+
+  import io.micrometer.core.instrument.Clock
+
+  val elasticConfig = new ElasticConfig()
+  val registry = new ElasticMeterRegistry(elasticConfig, Clock.SYSTEM)
   server.start().join()
 }
 
