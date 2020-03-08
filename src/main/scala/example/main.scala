@@ -11,6 +11,7 @@ import com.linecorp.armeria.server.logging.LoggingService
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.stub.StreamObserver
 import org.slf4j.LoggerFactory
+import io.micrometer.elastic.ElasticMeterRegistry
 
 object Main extends App {
   val service = GrpcService

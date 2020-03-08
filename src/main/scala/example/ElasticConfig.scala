@@ -3,7 +3,8 @@ package example
 import scala.util.control.NonFatal
 
 import org.slf4j.LoggerFactory
-
+import io.micrometer.elastic
+import com.typesafe.config.ConfigFactory
 
 /**
  * Copyright SameMo 2020
