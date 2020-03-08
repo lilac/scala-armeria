@@ -45,6 +45,7 @@ class ScopedGrpcPlugin(configuration: Configuration) extends AutoPlugin {
       val exe: File = baseDirectory.value / ".bin" / grpcExeFileName
       if (!exe.exists) {
         import scala.concurrent.duration._
+        exe.getParentFile.mkdirs()
         logger.info(s"gRPC protoc plugin (for Java) does not exist. Downloading from $grpcExeUrl")
         val req = Gigahorse.url(grpcExeUrl).withFollowRedirects(true)
         val f = Gigahorse.http(Gigahorse.config).download(req, exe)

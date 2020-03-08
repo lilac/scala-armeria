@@ -22,12 +22,13 @@ trait BaseModule extends JavaModule {
   override def zincWorker = CustomZincWorkerModule
 }
 
-object root extends SbtModule with BaseModule {
-  def scalaVersion = "2.12.4"
+trait BaseScalaModule extends ScalaModule with BaseModule {
+  def scalaVersion = T { "2.12.4" }
+}
 
-  override def millSourcePath = millOuterCtx.millSourcePath
+object server extends BaseScalaModule with SbtModule {
 
-  override def moduleDeps = Seq(protobuf)
+  override def moduleDeps = Seq(protocol)
 
   override def ivyDeps = Agg(
     ivy"com.typesafe:config:1.4.0",
@@ -36,12 +37,11 @@ object root extends SbtModule with BaseModule {
   )
 }
 
-object protobuf extends ScalaPBModule with BaseModule {
-  def scalaVersion = root.scalaVersion
+object protocol extends ScalaPBModule with BaseScalaModule {
 
   def scalaPBVersion = "0.9.5"
 
-  override def millSourcePath = millOuterCtx.millSourcePath / "src" / "main"
+  override def millSourcePath = super.millSourcePath / "src" / "main"
 
   import mill.scalalib.Lib.resolveDependencies
   import mill.api.Loose
