@@ -1,22 +1,21 @@
 package example
 
-import com.example.grpc.hello.Hello
-import com.example.grpc.hello.Hello.HelloReply
-import com.example.grpc.hello.HelloServiceGrpc.HelloServiceImplBase
+import scala.concurrent.{ ExecutionContext, Future }
+
+import com.example.grpc.hello.hello.HelloServiceGrpc
 import com.linecorp.armeria.common.grpc.GrpcSerializationFormats
 import com.linecorp.armeria.server.Server
 import com.linecorp.armeria.server.docs.DocService
 import com.linecorp.armeria.server.grpc.GrpcService
 import com.linecorp.armeria.server.logging.LoggingService
 import io.grpc.protobuf.services.ProtoReflectionService
-import io.grpc.stub.StreamObserver
-import org.slf4j.LoggerFactory
 import io.micrometer.elastic.ElasticMeterRegistry
+import org.slf4j.LoggerFactory
 
 object Main extends App {
   val service = GrpcService
     .builder()
-    .addService(new HelloService())
+    .addService(ServiceModule.helloServiceDefinition)
     .addService(ProtoReflectionService.newInstance())
     .supportedSerializationFormats(GrpcSerializationFormats.values())
     .enableUnframedRequests(true)
@@ -35,21 +34,25 @@ object Main extends App {
   server.start().join()
 }
 
+object ServiceModule {
+  def ec = ExecutionContext.global
+  def helloService = new HelloService()
+  def helloServiceDefinition = HelloServiceGrpc.bindService(helloService, ec)
+}
+
 object HelloService {
   private val logger = LoggerFactory.getLogger(getClass)
 }
 
-class HelloService extends HelloServiceImplBase {
+class HelloService extends HelloServiceGrpc.HelloService {
   import HelloService._
+  import com.example.grpc.hello.hello._
 
-  override def hello(
-      request: Hello.HelloRequest,
-      responseObserver: StreamObserver[Hello.HelloReply]): Unit = {
-    val name = request.getName
+  override def hello(request: HelloRequest): Future[HelloReply] = {
+    val name = request.name
     logger.info("Received message: {}", name)
-    val reply = HelloReply.newBuilder().setMessage(s"How are u, $name").build()
-    responseObserver.onNext(reply)
-    responseObserver.onCompleted()
+    val reply = HelloReply().withMessage(s"How are u, $name")
+    Future.successful(reply)
   }
 
 }
