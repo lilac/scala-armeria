@@ -29,14 +29,9 @@ object root extends SbtModule with BaseModule {
   object protobuf extends ScalaPBModule with BaseModule {
     def scalaVersion = root.scalaVersion
 
-    def scalaPBVersion = "0.9.5" //"0.7.4"
+    def scalaPBVersion = "0.9.5"
 
-    def millSourcePath = root.millSourcePath / "src" / "main" / "protobuf"
-
-    def scalaPBSources = T.sources(
-//      root.millSourcePath / "src" / "api" / "protobuf",
-      millSourcePath
-    )
+    def millSourcePath = root.millSourcePath / "src" / "main"
 
     import mill.scalalib.Lib.resolveDependencies
     import mill.api.Loose
@@ -51,14 +46,8 @@ object root extends SbtModule with BaseModule {
         Seq(ivy"com.thesamet.scalapb::scalapbc:${scalaPBVersion()}")
       )
     }
-    /*
-    def ivyDeps = Agg(
-      ivy"com.trueaccord.scalapb::scalapb-runtime:$scalaPBVersion;classifier=protobuf"
-    )
-    */
     // override def scalaPBFlatPackage: T[Boolean] = T { true }
     // override def scalaPBJavaConversions: T[Boolean] = T { true }
-    // override def scalaPBOptions = "flat_package,java_conversions"
   }
 
   def moduleDeps = Seq(protobuf)
