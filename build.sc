@@ -1,7 +1,8 @@
-import mill._, scalalib._
+import mill._
+import scalalib._
 import $ivy.`com.lihaoyi::mill-contrib-scalapblib:$MILL_VERSION`
-
 import contrib.scalapblib._
+import coursier.Repository
 import coursier.maven.MavenRepository
 
 val extraRepositories = Seq(
@@ -10,52 +11,52 @@ val extraRepositories = Seq(
 )
 
 trait Repo extends CoursierModule {
-  def repositories = extraRepositories
+  def repositories: Seq[Repository] = extraRepositories
 }
 
 object CustomZincWorkerModule extends ZincWorkerModule {
-  def repositories = /*super.repositories ++ */extraRepositories
+  override def repositories = /*super.repositories ++ */extraRepositories
 }
 
 trait BaseModule extends JavaModule {
-  def zincWorker = CustomZincWorkerModule
+  override def zincWorker = CustomZincWorkerModule
 }
 
 object root extends SbtModule with BaseModule {
   def scalaVersion = "2.12.4"
 
-  def millSourcePath = build.millSourcePath
+  override def millSourcePath = millOuterCtx.millSourcePath
 
-  object protobuf extends ScalaPBModule with BaseModule {
-    def scalaVersion = root.scalaVersion
+  override def moduleDeps = Seq(protobuf)
 
-    def scalaPBVersion = "0.9.5"
-
-    def millSourcePath = root.millSourcePath / "src" / "main"
-
-    import mill.scalalib.Lib.resolveDependencies
-    import mill.api.Loose
-    import mill.api.PathRef
-
-    def scalaPBClasspath: T[Loose.Agg[PathRef]] = T {
-      resolveDependencies(
-        Seq(
-          coursier.LocalRepositories.ivy2Local,
-        ) ++ extraRepositories,
-        Lib.depToDependency(_, "2.12.4"),
-        Seq(ivy"com.thesamet.scalapb::scalapbc:${scalaPBVersion()}")
-      )
-    }
-    // override def scalaPBFlatPackage: T[Boolean] = T { true }
-    // override def scalaPBJavaConversions: T[Boolean] = T { true }
-  }
-
-  def moduleDeps = Seq(protobuf)
-
-  def ivyDeps = Agg(
+  override def ivyDeps = Agg(
     ivy"com.typesafe:config:1.4.0",
     ivy"com.linecorp.armeria:armeria-grpc:0.98.0",
     ivy"io.micrometer:micrometer-registry-elastic:1.3.5"
   )
+}
+
+object protobuf extends ScalaPBModule with BaseModule {
+  def scalaVersion = root.scalaVersion
+
+  def scalaPBVersion = "0.9.5"
+
+  override def millSourcePath = millOuterCtx.millSourcePath / "src" / "main"
+
+  import mill.scalalib.Lib.resolveDependencies
+  import mill.api.Loose
+  import mill.api.PathRef
+
+  override def scalaPBClasspath: T[Loose.Agg[PathRef]] = T {
+    resolveDependencies(
+      Seq(
+        coursier.LocalRepositories.ivy2Local
+      ) ++ extraRepositories,
+      Lib.depToDependency(_, "2.12.4"),
+      Seq(ivy"com.thesamet.scalapb::scalapbc:${scalaPBVersion()}")
+    )
+  }
+  // override def scalaPBFlatPackage: T[Boolean] = T { true }
+  // override def scalaPBJavaConversions: T[Boolean] = T { true }
 }
 
