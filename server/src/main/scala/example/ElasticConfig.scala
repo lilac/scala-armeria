@@ -19,7 +19,7 @@ class ElasticConfig extends elastic.ElasticConfig {
       config.getString(key)
     } catch {
       case NonFatal(e) =>
-        logger.warn(s"Config missing for key: $key")
+        // logger.warn(s"Config missing for key: $key")
         null
     }
   }
