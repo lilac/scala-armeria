@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+set -e
+
+ssh localhost -p 22222

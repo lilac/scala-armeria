@@ -34,7 +34,8 @@ object server extends BaseScalaModule with SbtModule {
     ivy"com.typesafe:config:1.4.0",
     ivy"com.linecorp.armeria:armeria-grpc:0.98.0",
     ivy"io.micrometer:micrometer-registry-elastic:1.3.5",
-    ivy"org.apache.logging.log4j:log4j-slf4j-impl:2.9.1"
+    ivy"org.apache.logging.log4j:log4j-slf4j-impl:2.9.1",
+    ivy"com.lihaoyi:ammonite-sshd_${scalaVersion()}:2.0.4"
   )
 }
 

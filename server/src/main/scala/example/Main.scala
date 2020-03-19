@@ -26,6 +26,7 @@ object Main extends App {
     .build()
 
   MetricsModule.initialize()
+  Console.sshServer.start()
 
   System.out.println(s"Server starts at http://localhost:$port")
   server.start().join()
