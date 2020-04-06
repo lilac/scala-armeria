@@ -1,6 +1,6 @@
 syntax = "proto3";
  
-package grpc.hello;
+package com.example.grpc.hello;
  
 option java_package = "com.example.grpc.hello";
  

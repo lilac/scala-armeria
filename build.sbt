@@ -27,7 +27,10 @@ lazy val root = (project in file("server"))
       armeria,
       armeriaGrpc,
       microMeter,
-      "com.typesafe" % "config" % "1.4.0"
+      "com.typesafe" % "config" % "1.4.0",
+      "com.lihaoyi" % "ammonite-sshd_2.13.1" % "2.0.4",
+//      "com.avast.grpc" %% "grpc-json-bridge-core-scalapb" % "0.17.5",
+      "com.avast.grpc" %% "grpc-json-bridge-core" % "0.17.5"
     ),
     libraryDependencies += scalaTest % Test,
     externalResolvers := externalResolvers.value // Resolver.combineDefaultResolvers(resolvers.value.toVector, false)

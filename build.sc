@@ -1,6 +1,7 @@
 import mill._
 import scalalib._
 import $ivy.`com.lihaoyi::mill-contrib-scalapblib:$MILL_VERSION`
+import $ivy.`com.lihaoyi::mill-contrib-bsp:$MILL_VERSION`
 import contrib.scalapblib._
 import coursier.Repository
 import coursier.maven.MavenRepository
@@ -35,7 +36,8 @@ object server extends BaseScalaModule with SbtModule {
     ivy"com.linecorp.armeria:armeria-grpc:0.98.0",
     ivy"io.micrometer:micrometer-registry-elastic:1.3.5",
     ivy"org.apache.logging.log4j:log4j-slf4j-impl:2.9.1",
-    ivy"com.lihaoyi:ammonite-sshd_${scalaVersion()}:2.0.4"
+    ivy"com.lihaoyi:ammonite-sshd_${scalaVersion()}:2.0.4",
+    ivy"com.avast.grpc::grpc-json-bridge-core-scalapb:0.17.5"
   )
 }
 
