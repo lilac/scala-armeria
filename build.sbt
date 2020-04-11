@@ -15,9 +15,13 @@ externalResolvers := Resolver.combineDefaultResolvers(resolvers.value.toVector, 
 lazy val protocol = (project in file("protocol"))
   .enablePlugins(GrpcPlugin)
   .settings(
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    ),
     libraryDependencies ++= Seq(
       "io.grpc" % "grpc-protobuf" % "1.27.0",
-      "io.grpc" % "grpc-stub" % "1.27.0"
+      "io.grpc" % "grpc-stub" % "1.27.0",
+      "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
     )
   )
 lazy val root = (project in file("server"))
@@ -29,7 +33,8 @@ lazy val root = (project in file("server"))
       microMeter,
       "com.typesafe" % "config" % "1.4.0",
       "com.lihaoyi" % "ammonite-sshd_2.13.1" % "2.0.4",
-//      "com.avast.grpc" %% "grpc-json-bridge-core-scalapb" % "0.17.5",
+      "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.9.1",
+      "com.avast.grpc" %% "grpc-json-bridge-core-scalapb" % "0.17.5",
       "com.avast.grpc" %% "grpc-json-bridge-core" % "0.17.5"
     ),
     libraryDependencies += scalaTest % Test,

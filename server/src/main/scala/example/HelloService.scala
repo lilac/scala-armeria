@@ -1,8 +1,8 @@
 package example
 
-import com.example.grpc.hello.Hello.{ HelloReply, HelloRequest }
-import com.example.grpc.hello.HelloServiceGrpc.HelloServiceImplBase
-import io.grpc.stub.StreamObserver
+import scala.concurrent.Future
+
+import com.example.grpc.hello.hello.HelloServiceGrpc
 import org.slf4j.LoggerFactory
 
 /**
@@ -12,17 +12,15 @@ object HelloService {
   private val logger = LoggerFactory.getLogger(getClass)
 }
 
-class HelloService extends HelloServiceImplBase {
+class HelloService extends HelloServiceGrpc.HelloService {
   import HelloService._
+  import com.example.grpc.hello.hello._
 
-  /**
-   */
-  override def hello(request: HelloRequest, responseObserver: StreamObserver[HelloReply]): Unit = {
-    val name = request.getName
+  override def hello(request: HelloRequest): Future[HelloReply] = {
+    val name = request.name
     logger.info("Received message: {}", name)
-    val reply = HelloReply.newBuilder().setMessage(s"How are u, $name").build()
-    responseObserver.onNext(reply)
-    responseObserver.onCompleted()
+    val reply = HelloReply().withMessage(s"How are u, $name")
+    Future.successful(reply)
   }
 
 }

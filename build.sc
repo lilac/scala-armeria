@@ -43,10 +43,10 @@ object server extends BaseScalaModule with SbtModule {
 
 object protocol extends ScalaPBModule with BaseScalaModule {
 
-  def scalaPBVersion = "0.9.5"
+  def scalaPBVersion = "0.10.1"
 
   override def millSourcePath = super.millSourcePath / "src" / "main"
-
+/*
   import mill.scalalib.Lib.resolveDependencies
   import mill.api.Loose
   import mill.api.PathRef
@@ -59,7 +59,7 @@ object protocol extends ScalaPBModule with BaseScalaModule {
       Lib.depToDependency(_, "2.12.4"),
       Seq(ivy"com.thesamet.scalapb::scalapbc:${scalaPBVersion()}")
     )
-  }
+  }*/
   // override def scalaPBFlatPackage: T[Boolean] = T { true }
   // override def scalaPBJavaConversions: T[Boolean] = T { true }
 }
